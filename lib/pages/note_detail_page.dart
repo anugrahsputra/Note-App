@@ -40,7 +40,10 @@ class _NoteDetailState extends State<NoteDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [editButton(), deleteButton()],
+        actions: [
+          editButton(),
+          deleteButton(),
+        ],
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -75,16 +78,19 @@ class _NoteDetailState extends State<NoteDetail> {
 
   Widget editButton() {
     return IconButton(
-        icon: const Icon(Icons.edit_outlined),
-        onPressed: () async {
-          if (isLoading) return;
+      icon: const Icon(Icons.edit_outlined),
+      onPressed: () async {
+        if (isLoading) return;
 
-          await Navigator.of(context).push(MaterialPageRoute(
+        await Navigator.of(context).push(
+          MaterialPageRoute(
             builder: (context) => AddEditNotePage(note: note),
-          ));
+          ),
+        );
 
-          refreshNote();
-        });
+        refreshNote();
+      },
+    );
   }
 
   Widget deleteButton() {
