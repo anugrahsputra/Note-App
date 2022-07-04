@@ -1,7 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.notestaking_app">
+    <uses-permission android:name="android.permission.INTERNET" />
    <application
-        android:label="notestaking_app"
+        android:label="Just Note It"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
@@ -33,6 +34,6 @@
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713"/>
+            android:value="ca-app-pub-2195144444637158~6787050768"/>
     </application>
 </manifest>
