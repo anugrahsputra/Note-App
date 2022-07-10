@@ -10,4 +10,12 @@ class AdHelper {
       throw UnsupportedError('Unsupported Platform');
     }
   }
+
+  static String get interstitialUnitId {
+    if (Platform.isAndroid) {
+      return 'ca-app-pub-3940256099942544/8691691433';
+    } else {
+      throw 'Unknown platform';
+    }
+  }
 }

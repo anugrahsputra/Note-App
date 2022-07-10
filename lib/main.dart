@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'pages/note_page.dart';
+import 'splashscreen.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,13 +28,17 @@ class MyApp extends StatelessWidget {
         title: title,
         themeMode: ThemeMode.dark,
         theme: ThemeData(
-          primaryColor: Colors.black,
-          scaffoldBackgroundColor: Colors.blueGrey.shade900,
+          primaryColor: const Color(0xff090808),
+          scaffoldBackgroundColor: const Color(0xff090808),
           appBarTheme: const AppBarTheme(
             backgroundColor: Colors.transparent,
             elevation: 0,
           ),
         ),
-        home: const NotePage(),
+        // home: const NotePage(),
+        routes: {
+          '/': (context) => const Splashscreen(),
+          '/home': (context) => const NotePage(),
+        },
       );
 }

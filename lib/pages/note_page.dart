@@ -17,6 +17,9 @@ class NotePage extends StatefulWidget {
 }
 
 class _NotePageState extends State<NotePage> {
+  int _interstitialLoadAttempt = 0;
+
+  InterstitialAd? _interstitialAd;
   late BannerAd _bottomBannerAd;
   late List<Note> notes;
   bool isLoading = false;
@@ -38,18 +41,51 @@ class _NotePageState extends State<NotePage> {
     _bottomBannerAd.load();
   }
 
+  void _createInterstitialAd() {
+    InterstitialAd.load(
+      adUnitId: AdHelper.interstitialUnitId,
+      request: const AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (InterstitialAd ad) {
+          _interstitialAd = ad;
+          _interstitialLoadAttempt = 0;
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          _interstitialLoadAttempt = 1;
+          _interstitialAd = null;
+        },
+      ),
+    );
+  }
+
+  void _showInterstitialAd() {
+    if (_interstitialAd != null) {
+      _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+          onAdDismissedFullScreenContent: (InterstitialAd ad) {
+        ad.dispose();
+        _createInterstitialAd();
+      }, onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+        ad.dispose();
+        _createInterstitialAd();
+      });
+      _interstitialAd!.show();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
 
     refreshNotes();
     _createBottomBannerAd();
+    _createInterstitialAd();
   }
 
   @override
   void dispose() {
     NotesDatabase.instance.close();
     _bottomBannerAd.dispose();
+    _interstitialAd?.dispose();
 
     super.dispose();
   }
@@ -85,6 +121,8 @@ class _NotePageState extends State<NotePage> {
         backgroundColor: Colors.black,
         child: const Icon(Icons.add),
         onPressed: () async {
+          _showInterstitialAd();
+          print('ad loaded');
           await Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => const AddEditNotePage()),
           );
