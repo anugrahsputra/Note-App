@@ -106,6 +106,7 @@ class _NotePageState extends State<NotePage> {
           'Notes',
           style: TextStyle(fontSize: 24),
         ),
+        automaticallyImplyLeading: false,
       ),
       body: Center(
         child: isLoading
@@ -118,8 +119,8 @@ class _NotePageState extends State<NotePage> {
                 : buildNotes(),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.black,
-        child: const Icon(Icons.add),
+        backgroundColor: Colors.white,
+        child: const Icon(Icons.add, color: Colors.black),
         onPressed: () async {
           _showInterstitialAd();
           print('ad loaded');

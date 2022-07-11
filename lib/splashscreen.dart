@@ -16,9 +16,9 @@ class _SplashscreenState extends State<Splashscreen> {
     super.initState();
   }
 
-  void getInit() async {
-    await Future.delayed(const Duration(seconds: 3));
-    Navigator.pushNamed(context, '/home');
+  getInit() async {
+    await Future.delayed(const Duration(seconds: 2));
+    Navigator.pushReplacementNamed(context, '/home');
   }
 
   @override

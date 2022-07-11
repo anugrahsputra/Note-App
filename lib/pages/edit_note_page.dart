@@ -64,8 +64,8 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          onPrimary: Colors.white,
-          primary: isFormValid ? null : Colors.grey.shade700,
+          onPrimary: Colors.black,
+          primary: isFormValid ? Colors.white : Colors.grey.shade700,
         ),
         onPressed: addOrUpdateNote,
         child: const Text('Save'),

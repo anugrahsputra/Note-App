@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 
 import '../database/notes_database.dart';
+import '../helper/ad_helper.dart';
 import '../model/note.dart';
 import 'edit_note_page.dart';
 
@@ -19,13 +21,39 @@ class NoteDetail extends StatefulWidget {
 
 class _NoteDetailState extends State<NoteDetail> {
   late Note note;
+  late BannerAd _bottomBannerAd;
   bool isLoading = false;
+  bool _isBottomBannerAdLoaded = false;
+
+  void _createBottomBannerAd() {
+    _bottomBannerAd = BannerAd(
+      size: AdSize.banner,
+      adUnitId: AdHelper.bannerUnitId,
+      listener: BannerAdListener(onAdLoaded: (_) {
+        setState(() {
+          _isBottomBannerAdLoaded = true;
+        });
+      }, onAdFailedToLoad: (ad, error) {
+        ad.dispose();
+      }),
+      request: const AdRequest(),
+    );
+    _bottomBannerAd.load();
+  }
 
   @override
   void initState() {
     super.initState();
 
     refreshNote();
+    _createBottomBannerAd();
+  }
+
+  @override
+  void dispose() {
+    _bottomBannerAd.dispose();
+
+    super.dispose();
   }
 
   Future refreshNote() async {
@@ -73,6 +101,15 @@ class _NoteDetailState extends State<NoteDetail> {
                 ],
               ),
             ),
+      bottomNavigationBar: _isBottomBannerAdLoaded
+          ? SizedBox(
+              height: _bottomBannerAd.size.height.toDouble(),
+              width: _bottomBannerAd.size.width.toDouble(),
+              child: AdWidget(
+                ad: _bottomBannerAd,
+              ),
+            )
+          : null,
     );
   }
 

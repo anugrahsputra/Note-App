@@ -18,14 +18,11 @@ Future main() async {
 }
 
 class MyApp extends StatelessWidget {
-  static const String title = 'Notes SQLite';
-
   const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: title,
         themeMode: ThemeMode.dark,
         theme: ThemeData(
           primaryColor: const Color(0xff090808),
