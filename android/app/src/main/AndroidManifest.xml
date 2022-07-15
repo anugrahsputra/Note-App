@@ -1,6 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.notestaking_app">
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
    <application
         android:label="Just Note It"
         android:name="${applicationName}"
@@ -34,6 +35,6 @@
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-2195144444637158~6787050768"/>
+            android:value="ca-app-pub-3868929698742754~9841046369"/>
     </application>
 </manifest>
