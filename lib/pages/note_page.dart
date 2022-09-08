@@ -123,7 +123,7 @@ class _NotePageState extends State<NotePage> {
         child: const Icon(Icons.add, color: Colors.black),
         onPressed: () async {
           _showInterstitialAd();
-          print('ad loaded');
+          // print('ad loaded');
           await Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => const AddEditNotePage()),
           );
@@ -152,6 +152,7 @@ class _NotePageState extends State<NotePage> {
       mainAxisSpacing: 4,
       crossAxisSpacing: 4,
       itemBuilder: (context, index) {
+        _showInterstitialAd();
         final note = notes[index];
 
         return GestureDetector(

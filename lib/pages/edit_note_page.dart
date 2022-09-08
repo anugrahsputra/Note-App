@@ -1,8 +1,10 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import '../database/notes_database.dart';
+import '../helper/ad_helper.dart';
 import '../model/note.dart';
 import '../widget/note_form_widget.dart';
 
@@ -23,15 +25,40 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
   late int number;
   late String title;
   late String description;
+  late BannerAd _bottomBannerAd;
+  bool _isBottomBannerAdLoaded = false;
+
+  void _createBottomBannerAd() {
+    _bottomBannerAd = BannerAd(
+      size: AdSize.banner,
+      adUnitId: AdHelper.bannerUnitId,
+      listener: BannerAdListener(onAdLoaded: (_) {
+        setState(() {
+          _isBottomBannerAdLoaded = true;
+        });
+      }, onAdFailedToLoad: (ad, error) {
+        ad.dispose();
+      }),
+      request: const AdRequest(),
+    );
+    _bottomBannerAd.load();
+  }
 
   @override
   void initState() {
     super.initState();
 
+    _createBottomBannerAd();
     isImportant = widget.note?.isImportant ?? false;
     number = widget.note?.number ?? 0;
     title = widget.note?.title ?? '';
     description = widget.note?.description ?? '';
+  }
+
+  @override
+  void dispose() {
+    _bottomBannerAd.dispose();
+    super.dispose();
   }
 
   @override
@@ -54,6 +81,13 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
               setState(() => this.description = description),
         ),
       ),
+      bottomNavigationBar: _isBottomBannerAdLoaded
+          ? SizedBox(
+              height: _bottomBannerAd.size.height.toDouble(),
+              width: _bottomBannerAd.size.width.toDouble(),
+              child: AdWidget(ad: _bottomBannerAd),
+            )
+          : null,
     );
   }
 
@@ -64,8 +98,8 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          onPrimary: Colors.black,
-          primary: isFormValid ? Colors.white : Colors.grey.shade700,
+          foregroundColor: Colors.black,
+          backgroundColor: isFormValid ? Colors.white : Colors.grey.shade700,
         ),
         onPressed: addOrUpdateNote,
         child: const Text('Save'),

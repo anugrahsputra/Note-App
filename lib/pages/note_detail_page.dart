@@ -20,6 +20,8 @@ class NoteDetail extends StatefulWidget {
 }
 
 class _NoteDetailState extends State<NoteDetail> {
+  int _interstitialLoadAttempt = 0;
+  InterstitialAd? _interstitialAd;
   late Note note;
   late BannerAd _bottomBannerAd;
   bool isLoading = false;
@@ -41,17 +43,50 @@ class _NoteDetailState extends State<NoteDetail> {
     _bottomBannerAd.load();
   }
 
+  void _createInterstitialAd() {
+    InterstitialAd.load(
+      adUnitId: AdHelper.interstitialUnitId,
+      request: const AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (InterstitialAd ad) {
+          _interstitialAd = ad;
+          _interstitialLoadAttempt = 0;
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          _interstitialLoadAttempt = 1;
+          _interstitialAd = null;
+        },
+      ),
+    );
+  }
+
+  void _showInterstitialAd() {
+    if (_interstitialAd != null) {
+      _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+          onAdDismissedFullScreenContent: (InterstitialAd ad) {
+        ad.dispose();
+        _createInterstitialAd();
+      }, onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+        ad.dispose();
+        _createInterstitialAd();
+      });
+      _interstitialAd!.show();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
 
     refreshNote();
     _createBottomBannerAd();
+    _createInterstitialAd();
   }
 
   @override
   void dispose() {
     _bottomBannerAd.dispose();
+    _interstitialAd?.dispose();
 
     super.dispose();
   }
@@ -117,6 +152,7 @@ class _NoteDetailState extends State<NoteDetail> {
     return IconButton(
       icon: const Icon(Icons.edit_outlined),
       onPressed: () async {
+        _showInterstitialAd();
         if (isLoading) return;
 
         await Navigator.of(context).push(
