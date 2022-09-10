@@ -32,7 +32,6 @@ class MyApp extends StatelessWidget {
             elevation: 0,
           ),
         ),
-        // home: const NotePage(),
         routes: {
           '/': (context) => const Splashscreen(),
           '/home': (context) => const NotePage(),
